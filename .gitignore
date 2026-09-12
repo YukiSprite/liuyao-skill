@@ -1,0 +1,8 @@
+# 原始转录稿仅本地保留
+/六爻零基础*.txt
+
+# 本地运行产生的文件
+__pycache__/
+*.py[cod]
+.DS_Store
+/output/

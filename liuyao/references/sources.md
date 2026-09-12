@@ -12,7 +12,7 @@
 | S2 | [教程排盘篇](https://www.bilibili.com/video/BV12bzpBuEuG/?p=2)；原 TXT 第 5—35 行 | 背面计数映射、爻序、世应、寻宫、变爻六亲沿用本宫、补伏神、六神 |
 | S3 | [教程用神篇](https://www.bilibili.com/video/BV12bzpBuEuG/?p=3)；原 TXT 第 5—35 行 | 用元忌仇、作用方向、初步旺衰、案例边界 |
 
-正文规则已压缩为自包含的 input.md 与 interpretation.md，运行不依赖用户电脑上的原始 TXT 路径。原有三份 TXT 和五篇结构化文档仍留在项目中，未修改。
+正文规则已压缩为自包含的 input.md 与 interpretation.md，运行不依赖用户电脑上的原始 TXT 路径。仓库仅发布五篇结构化 Markdown 和技能参考规则；三份原始 TXT 转录稿仅在本地保留，不随仓库发布。
 
 ## 外部补充核验
 
