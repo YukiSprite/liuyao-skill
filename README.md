@@ -1,5 +1,8 @@
 # 六爻 · Liuyao Skill
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/YukiSprite/liuyao-skill?style=social)](https://github.com/YukiSprite/liuyao-skill/stargazers)
+
 输入一个问题、六次硬币投掷结果和起卦时间，让 AI 自动排出六爻卦盘，并给出有规则依据的占断。
 
 本项目面向支持 `SKILL.md` 的 AI 助手，已按 Codex 的技能目录结构组织。采用《增删卜易》入门体系，由 Python 程序完成固定排盘，由 AI 结合参考规则完成解读。
@@ -164,3 +167,17 @@ python3 -B liuyao/scripts/checks.py
 ## 第三方依赖
 
 历法计算使用 [lunar-python](https://github.com/6tail/lunar-python) 1.4.8，随附包保留其 [MIT 许可证](liuyao/vendor/lunar_python-1.4.8.dist-info/LICENSE)。
+
+## 开源许可
+
+本项目的原创代码与文档采用 [MIT License](LICENSE)，版权署名为 `Copyright (c) 2026 YukiSprite`。技能目录内也附有许可证，便于单独安装和分发。
+
+原视频及第三方引用内容的权利归各自权利人所有，本项目的 MIT 许可不替代其原有许可或授权；知识来源与致谢见上文。
+
+## Star 历史
+
+如果这个项目对你有帮助，欢迎点一个 Star。
+
+[![Star 历史图](https://starchart.cc/YukiSprite/liuyao-skill.svg)](https://starchart.cc/YukiSprite/liuyao-skill)
+
+图表由 [Starchart](https://github.com/caarlos0/starcharts) 提供，点击图片可查看仓库的 Star 增长记录。
