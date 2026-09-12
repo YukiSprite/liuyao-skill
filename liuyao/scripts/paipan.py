@@ -258,7 +258,44 @@ def build_chart(data):
               "source_ids": ["S1", "S2", "S3", "E1", "E2", "E3", "E4"]}
     signature = {"values": values, "question": data["question"], "calendar": calendar, "focus": focus}
     result["chart_id"] = hashlib.sha256(json.dumps(signature, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+    result["text_diagram"] = render_text_diagram(result)
     return result
+
+
+def render_text_diagram(chart):
+    """画六行爻象；世应属于本卦，箭头只标原动爻。"""
+    import unicodedata
+
+    def pad(text, width):
+        display_width = sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
+        return text + " " * max(0, width - display_width)
+
+    def stroke(yang):
+        return "━━━━━━━━━" if yang else "━━━   ━━━"
+
+    changed = chart["changed"]
+    title = "本卦：" + chart["original"]["name"]
+    lines = ["        " + (pad(title, 20) + "   变卦：" + changed["name"] if changed else title + "（静卦）"), ""]
+    labels = ("初爻", "二爻", "三爻", "四爻", "五爻", "上爻")
+    for row in reversed(chart["lines_bottom_up"]):
+        marker = ("○" if row["yang"] else "×") if row["moving"] else " "
+        role = "世" if row["self"] else "应" if row["other"] else ""
+        left = stroke(row["yang"]) + " " + marker + " " + role
+        line = labels[row["position"] - 1] + "    "
+        if changed:
+            right = changed["layout_bottom_up"][row["position"] - 1]
+            line += pad(left, 20) + (" → " if row["moving"] else "   ") + stroke(right["yang"])
+        else:
+            line += left.rstrip()
+        lines.append(line)
+        if row["position"] == 4:
+            lines.append("")
+    lines += ["", "实线为阳，断线为阴；从下往上对应第 1—6 次投掷。"]
+    if changed:
+        lines.append("○ 老阳变阴；× 老阴变阳；箭头标动爻，世／应标在本卦。")
+    else:
+        lines.append("六爻皆静，无变卦；世／应标在本卦。")
+    return "\n".join(lines)
 
 
 def cell(value):
@@ -291,7 +328,8 @@ def render_markdown(chart):
         text.append(f"日月：{cal['month_branch']}月 {cal['day_ganzhi']}日；来源：{cell(cal['source'])}。")
     if cal.get("day_ganzhi"):
         text.append("日旬空：" + "、".join(cal["void"]) + "。")
-    text += ["", "卦图由上爻向初爻显示；数据和投掷次序从初爻向上记录。", "",
+    text += ["", "```text", render_text_diagram(chart), "```", "",
+             "卦图由上爻向初爻显示；数据和投掷次序从初爻向上记录。", "",
              "| 爻位 | 六神 | 伏神 | 本卦六亲纳甲 | 世应 | 本卦爻象 | 动静 | 动爻化出 | 时间标记 |",
              "|---|---|---|---|---|---|---|---|---|"]
     labels = ("初爻", "二爻", "三爻", "四爻", "五爻", "上爻")
@@ -322,7 +360,7 @@ def render_markdown(chart):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", required=True, help="输入 JSON 文件；- 表示标准输入")
-    parser.add_argument("--output-dir", help="新输出目录，保存 input.json、chart.json、chart.md；已存在时拒绝覆盖")
+    parser.add_argument("--output-dir", help="新输出目录，保存 input.json、chart.json、chart.md、diagram.txt；已存在时拒绝覆盖")
     args = parser.parse_args()
     try:
         raw = sys.stdin.read() if args.input == "-" else Path(args.input).read_text(encoding="utf-8")
@@ -334,6 +372,7 @@ def main():
             (out / "input.json").write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             (out / "chart.json").write_text(json.dumps(chart, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             (out / "chart.md").write_text(render_markdown(chart), encoding="utf-8")
+            (out / "diagram.txt").write_text(chart["text_diagram"] + "\n", encoding="utf-8")
             print(json.dumps({"ok": True, "chart_id": chart["chart_id"], "output_dir": str(out)}, ensure_ascii=False))
         else:
             print(json.dumps(chart, ensure_ascii=False, indent=2))

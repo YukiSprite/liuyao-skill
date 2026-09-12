@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 
 sys.dont_write_bytecode = True
-from paipan import build_chart, make_calendar, void_branches, render_markdown, InputError
+from paipan import build_chart, make_calendar, void_branches, render_markdown, render_text_diagram, InputError
 from tables import (HEXAGRAMS, TRIGRAMS, TRIGRAM_BY_BITS, BRANCHES, STEMS, KIN,
                     najia, relation, kin_for)
 
@@ -188,6 +188,32 @@ class CalendarTests(unittest.TestCase):
 
 
 class CommandTests(unittest.TestCase):
+    def test_text_diagram_mixed_lines_and_static_hexagram(self):
+        c = build_chart(request([0, 1, 2, 0, 3, 1]))
+        before = copy.deepcopy(c)
+        diagram = render_text_diagram(c)
+        self.assertEqual(c, before)
+        self.assertEqual(c['text_diagram'], diagram)
+        rows = [line for line in diagram.splitlines() if line.startswith(('上爻', '五爻', '四爻', '三爻', '二爻', '初爻'))]
+        self.assertEqual([line[:2] for line in rows], ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'])
+        # 手工卦例：涣的上至初爻为阳阳阴阴阳阴，睽为阳阴阳阴阳阳。
+        expected = [(True, True), (True, False), (False, True), (False, False), (True, True), (False, True)]
+        for line, (left, right) in zip(rows, expected):
+            self.assertTrue(line[6:].startswith('━━━━━━━━━' if left else '━━━   ━━━'))
+            self.assertTrue(line.endswith('━━━━━━━━━' if right else '━━━   ━━━'))
+        self.assertEqual([line[:2] for line in rows if '→' in line], ['五爻', '四爻', '初爻'])
+        self.assertIn('○ 世', rows[1])
+        self.assertIn('应', rows[4])
+        self.assertIn('×', rows[2])
+        self.assertIn('×', rows[5])
+        self.assertIn('```text\n' + diagram + '\n```', render_markdown(c))
+        for toss, line_shape in [(1, '━━━━━━━━━'), (2, '━━━   ━━━')]:
+            static = build_chart(request([toss] * 6))['text_diagram']
+            static_rows = [line for line in static.splitlines() if line.startswith(('上爻', '五爻', '四爻', '三爻', '二爻', '初爻'))]
+            self.assertEqual(len(static_rows), 6)
+            self.assertTrue(all(line.count(line_shape) == 1 for line in static_rows))
+            self.assertFalse(any(symbol in static for symbol in ('→', '○', '×', '变卦：')))
+
     def test_cli_output_and_no_overwrite(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
@@ -199,6 +225,7 @@ class CommandTests(unittest.TestCase):
             self.assertEqual(first.returncode,0,first.stderr)
             saved = (target/'chart.json').read_bytes()
             self.assertTrue((target/'chart.md').is_file())
+            self.assertEqual((target/'diagram.txt').read_text(encoding='utf-8').rstrip('\n'), json.loads(saved)['text_diagram'])
             second = subprocess.run(command,capture_output=True,text=True)
             self.assertEqual(second.returncode,2)
             self.assertEqual((target/'chart.json').read_bytes(),saved)

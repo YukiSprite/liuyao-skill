@@ -98,6 +98,7 @@
 | focus_candidates | 符合所选类别的本卦候选；本卦缺该类时列伏神；没有按旺衰擅自定用 |
 | nominal_edges | 原明动爻到其他本卦爻，以及本位变爻到原动爻的名义关系；不含自动推定的暗动 |
 | flags | 临日月、旬空、月冲、日冲等事实标记；不是吉凶结论 |
+| text_diagram | 可直接放入等宽代码块的字符卦图；本变卦并排，箭头仅标原动爻，世应仅标本卦 |
 
 `relation(source, target)` 始终按来源 → 对象解释：
 
@@ -112,4 +113,4 @@
 
 ## 5. 文件输出
 
-默认标准输出 JSON。指定新目录时生成 `input.json`、`chart.json`、`chart.md`，不覆盖旧目录。模型解释完成后可按用户保存意愿另写 `analysis.md`。`chart_id` 标识一次规范输入及计算结果；不能把它理解为预测置信度。
+默认标准输出 JSON，其中 `text_diagram` 为完整字符卦图。指定新目录时生成 `input.json`、`chart.json`、`chart.md`、`diagram.txt`，不覆盖旧目录。`chart.md` 已嵌入字符卦图，`diagram.txt` 可单独复制分享。模型解释完成后可按用户保存意愿另写 `analysis.md`。`chart_id` 标识一次规范输入及计算结果；不能把它理解为预测置信度。
