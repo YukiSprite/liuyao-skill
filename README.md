@@ -179,6 +179,12 @@ python3 -B liuyao/scripts/checks.py
 
 如果这个项目对你有帮助，欢迎点一个 Star。
 
-[![Star 历史图](https://starchart.cc/YukiSprite/liuyao-skill.svg)](https://starchart.cc/YukiSprite/liuyao-skill)
+<a href="https://www.star-history.com/?repos=YukiSprite%2Fliuyao-skill&amp;type=date&amp;legend=top-left">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=YukiSprite/liuyao-skill&amp;type=date&amp;theme=dark&amp;legend=top-left" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=YukiSprite/liuyao-skill&amp;type=date&amp;legend=top-left" />
+    <img alt="Star 历史图" src="https://api.star-history.com/chart?repos=YukiSprite/liuyao-skill&amp;type=date&amp;legend=top-left" />
+  </picture>
+</a>
 
-图表由 [Starchart](https://github.com/caarlos0/starcharts) 提供，点击图片可查看仓库的 Star 增长记录。
+图表由 [Star History](https://www.star-history.com/) 提供，支持浅色与深色主题，点击可查看详细记录。尚无 Star 时图中没有增长曲线；有记录后由图表服务更新。
